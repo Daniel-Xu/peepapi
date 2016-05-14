@@ -15,7 +15,7 @@ defmodule Peepchat.RegistrationController do
       {:ok, user} ->
         conn
         |> put_status(:created)
-        |> render(UserView, "show.json", user: user)
+        |> render(UserView, "show.json", data: user)
 
       {:error, changeset} ->
         conn
