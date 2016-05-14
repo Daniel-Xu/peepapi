@@ -6,7 +6,7 @@
 use Mix.Config
 
 # Configures the endpoint
-config :peepchat, Peepchat.Endpoint,
+config :peepchat, Peepchat.End,
   url: [host: "localhost"],
   root: Path.dirname(__DIR__),
   secret_key_base: "MTRDUDnGyxradcMGa6UyYhMrnj0YW7Y51K+rb2NeSKbIn3vVuzUx5dxTyEHoOonE",
@@ -19,14 +19,12 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-# Import environment specific config. This must remain at the bottom
-# of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+config :phoenix, :format_encoders,
+  "json-api": Poison
 
-# Configure phoenix generators
-config :phoenix, :generators,
-  migration: true,
-  binary_id: false
+config :plug, :mimes, %{
+  "application/vnd.api+json" => ["json-api"]
+}
 
 # Configure guardian
 config :guardian, Guardian,
@@ -37,3 +35,12 @@ config :guardian, Guardian,
   verify_issuer: true, # optional
   secret_key: System.get_env("GUARDIAN_SECRET") || "57cs/iZpVOu1xjgQmjjkNa80zEw2Y86vPAE2S+T6o3tHETmnKDnCRp/pR/BHuSd1",
   serializer: Peepchat.GuardianSerializer
+
+# Import environment specific config. This must remain at the bottom
+# of this file so it overrides the configuration defined above.
+import_config "#{Mix.env}.exs"
+
+# Configure phoenix generators
+config :phoenix, :generators,
+  migration: true,
+  binary_id: false
