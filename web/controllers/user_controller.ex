@@ -4,6 +4,7 @@ defmodule Peepchat.UserController do
   plug Guardian.Plug.EnsureAuthenticated, handler: Peepchat.AuthErrorHandler
 
   def current(conn, _) do
+
     user = conn
     |> Guardian.Plug.current_resource
 

@@ -1,8 +1,8 @@
 defmodule Peepchat.UserView do
   use Peepchat.Web, :view
 
-  def render("index.json", %{user: user}) do
-    %{data: render_many(user, Peepchat.UserView, "user.json")}
+  def render("index.json", %{users: users}) do
+    %{data: render_many(users, Peepchat.UserView, "user.json")}
   end
 
   def render("show.json", %{user: user}) do

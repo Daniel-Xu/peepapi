@@ -8,7 +8,7 @@ defmodule Peepchat.Router do
   pipeline :api_auth do
     plug :accepts, ["json", "json-api"]
     # for request, we need to verify token
-    plug Guardian.Plug.VerifyHeader
+    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource
   end
 
