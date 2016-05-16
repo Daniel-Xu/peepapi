@@ -3,7 +3,7 @@ defmodule Peepchat.Room do
 
   schema "rooms" do
     field :name, :string
-    belongs_to :owner, Peepchat.Owner
+    belongs_to :owner, Peepchat.User
 
     timestamps
   end
