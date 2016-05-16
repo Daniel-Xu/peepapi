@@ -3,6 +3,7 @@ defmodule Peepchat.Router do
 
   pipeline :api do
     plug :accepts, ["json", "json-api"]
+    plug JaSerializer.Deserializer
   end
 
   pipeline :api_auth do
@@ -10,6 +11,8 @@ defmodule Peepchat.Router do
     # for request, we need to verify token
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource
+    plug JaSerializer.ContentTypeNegotiation
+    plug JaSerializer.Deserializer
   end
 
   scope "/api", Peepchat do

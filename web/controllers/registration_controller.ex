@@ -3,13 +3,9 @@ defmodule Peepchat.RegistrationController do
   alias Peepchat.{User, Repo, UserView, ChangesetView}
 
   def create(conn, %{"data" => %{"type" => "users",
-        "attributes" => %{"email" => email,
-          "password" => password,
-          "password-confirmation" => password_confirmation}}}) do
+        "attributes" => user_params}}) do
 
-    changeset = User.changeset(%User{}, %{email: email,
-      password: password,
-      password_confirmation: password_confirmation})
+    changeset = User.changeset(%User{}, user_params)
 
     case Repo.insert changeset do
       {:ok, user} ->
