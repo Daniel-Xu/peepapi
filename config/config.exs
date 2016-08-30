@@ -6,7 +6,7 @@
 use Mix.Config
 
 # Configures the endpoint
-config :peepchat, Peepchat.End,
+config :peepchat, Peepchat.Endpoint,
   url: [host: "localhost"],
   root: Path.dirname(__DIR__),
   secret_key_base: "MTRDUDnGyxradcMGa6UyYhMrnj0YW7Y51K+rb2NeSKbIn3vVuzUx5dxTyEHoOonE",

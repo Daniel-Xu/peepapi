@@ -2,7 +2,7 @@ defmodule Peepchat.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "rooms:*", Peepchat.RoomChannel
+  channel "rooms:*", Peepchat.RoomChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket,

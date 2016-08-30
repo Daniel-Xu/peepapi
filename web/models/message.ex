@@ -1,15 +1,15 @@
-defmodule Peepchat.Room do
+defmodule Peepchat.Message do
   use Peepchat.Web, :model
 
-  schema "rooms" do
-    field :name, :string
-    belongs_to :owner, Peepchat.User
+  schema "messages" do
+    field :body, :string
+    belongs_to :user, Peepchat.User
+    belongs_to :room, Peepchat.Room
 
-    has_many :messages, Peepchat.Message
     timestamps
   end
 
-  @required_fields ~w(name)
+  @required_fields ~w(body room_id)
   @optional_fields ~w()
 
   @doc """
@@ -21,7 +21,5 @@ defmodule Peepchat.Room do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields, @optional_fields)
-    |> validate_length(:name, mix: 4)
-    |> unique_constraint(:name)
   end
 end

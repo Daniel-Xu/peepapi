@@ -9,6 +9,7 @@ defmodule Peepchat.User do
     field :password_confirmation, :string, virtual: true
 
     has_many :rooms, Peepchat.Room
+    has_many :messages, Peepchat.Message
 
     timestamps
   end

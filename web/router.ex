@@ -12,6 +12,7 @@ defmodule Peepchat.Router do
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource
     plug JaSerializer.ContentTypeNegotiation
+    # this helps to transfer data format
     plug JaSerializer.Deserializer
   end
 
@@ -23,10 +24,11 @@ defmodule Peepchat.Router do
   scope "/api", Peepchat do
     pipe_through :api_auth
     get "/user/current", UserController, :current, as: :current_user
-    resources "user", UserController, only: [:index, :show] do
+    resources "users", UserController, only: [:index, :show] do
       get "rooms", RoomController, :index, as: :rooms
     end
     resources "rooms", RoomController, except: [:new, :edit]
+    resources "/messages", MessageController, except: [:new, :edit]
   end
 
 end

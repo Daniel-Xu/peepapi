@@ -1,27 +1,30 @@
 defmodule Peepchat.RoomController do
   use Peepchat.Web, :controller
   import Ecto.Query
-
   alias Peepchat.Room
 
   plug Guardian.Plug.EnsureAuthenticated, handler: Peepchat.AuthErrorHandler
+
   def action(conn, _) do
     current_user = Guardian.Plug.current_resource(conn)
     apply(__MODULE__, action_name(conn), [conn, conn.params, current_user])
   end
 
   def index(conn, %{"user_id" => user_id}, _) do
-    rooms = Room
-    |> where(owner_id: ^user_id)
-    |> Repo.all
+    rooms =
+      from(r in Room, where: r.owner_id == ^user_id, preload: [:owner])
+      |> Repo.all
 
-    render(conn, "index.json", data: rooms)
+    render(conn, "index.json-api", data: rooms, opts: [include: "owner"])
   end
 
   def index(conn, _params, _) do
-    rooms = Repo.all(Room)
+    rooms =
+      Room
+      |> Repo.all
+      |> Repo.preload(:owner)
 
-    render(conn, "index.json", data: rooms)
+    render(conn, "index.json-api", data: rooms, opts: [include: "owner"])
   end
 
   def create(conn, %{"data" => %{"type" => "rooms", "attributes" => room_params, "relationships" => _}},
@@ -33,7 +36,7 @@ defmodule Peepchat.RoomController do
         conn
         |> put_status(:created)
         |> put_resp_header("location", room_path(conn, :show, room))
-        |> render("show.json", data: room)
+        |> render("show.json-api", data: room)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
@@ -41,9 +44,17 @@ defmodule Peepchat.RoomController do
     end
   end
 
+  def show(conn, %{"id" => id, "include" => include_assoc}, _) do
+    room =
+      Repo.get!(Room, id)
+      |> Repo.preload(String.to_atom(include_assoc))
+
+    render(conn, "show.json-api", data: room, opts: [include: include_assoc])
+  end
+
   def show(conn, %{"id" => id}, _) do
     room = Repo.get!(Room, id)
-    render(conn, "show.json", data: room)
+    render(conn, "show.json-api", data: room)
   end
 
   def update(conn, %{"id" => id, "data" => %{"id" => _, "type" => "rooms", "attributes" => room_params}},
@@ -57,7 +68,7 @@ defmodule Peepchat.RoomController do
 
     case Repo.update(changeset) do
       {:ok, room} ->
-        render(conn, "show.json", data: room)
+        render(conn, "show.json-api", data: room)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
